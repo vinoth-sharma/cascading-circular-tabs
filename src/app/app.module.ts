@@ -3,10 +3,15 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
+import { CascadingTabsComponent } from './cascading-tabs/cascading-tabs.component';
+import { SafeHtmlPipe } from "./safe.pipe";
+import { CascadingCircularTabsComponent } from './cascading-circular-tabs/cascading-circular-tabs.component';
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CascadingTabsComponent,
+    SafeHtmlPipe,
+    CascadingCircularTabsComponent
   ],
   imports: [
     BrowserModule,
