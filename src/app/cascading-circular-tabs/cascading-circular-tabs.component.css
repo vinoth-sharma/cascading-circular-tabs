@@ -11,9 +11,12 @@
     letter-spacing: 1px;
 
 }
-.opt-circle-list circle{
-    /* stroke: #80C4FF; */
-    stroke: #01457F;
-    stroke-width: 12;
+
+.opt-circle-list .img-circle,image{
+    stroke-width: 2;
+    stroke : #80C4FF;
+    fill: #01457F;
     cursor: pointer;
+
 }
+

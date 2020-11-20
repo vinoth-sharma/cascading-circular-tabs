@@ -1,54 +1,45 @@
 <div style="text-align: center">
-  <svg width="100vw" height="100vh" viewBox="0 0 900 700" #cascadingTabs>
+  <svg width="100vw" height="100vh" #cascadingTabs>
+    <!-- <svg width="100vw" height="100vh" viewBox="0 0 900 700" #cascadingTabs> -->
     <!-- <circle r="450" cx="450" cy="0" fill="grey" /> -->
     <!-- <circle r="300" cx="450" cy="0" fill="yellow" /> -->
     <!-- <circle r="150" cx="450" cy="0" fill="red" /> -->
 
-    <g *ngFor="let arr of circularTabList; let i = index" class="opt-circle-list">
-      <g>
+    <g
+      *ngFor="let arr of circularTabList; let i = index"
+      class="opt-circle-list"
+    >
+      <g *ngFor="let ele of arr">
         <circle
-          *ngFor="let ele of arr"
-          r="25"
+          class="img-circle"
+          r="20"
           [attr.cx]="ele.x"
           [attr.cy]="ele.y"
-          [attr.fill]="'url(#image' + ele.id + ')'"
           (click)="onClickOption(ele, i)"
           [id]="'circle_' + ele.id"
         />
+        <image
+          [attr.x]="ele.x - 10"
+          [attr.y]="ele.y - 10"
+          width="20"
+          height="20"
+          [attr.href]="ele.icon"
+          [attr.xlink:href]="ele.icon"
+          (click)="onClickOption(ele, i)"
+        ></image>
+
         <text
-          *ngFor="let ele of arr"
           [attr.x]="ele.textX"
           [attr.y]="ele.y"
           text-anchor="middle"
           dy=".3em"
+          (click)="onClickOption(ele, i)"
         >
           {{ ele.name }}
         </text>
       </g>
     </g>
 
-    <g *ngFor="let arr of circularTabList">
-      <defs *ngFor="let img of arr">
-        <pattern
-          [id]="'image' + img.id"
-          x="0%"
-          y="0%"
-          height="100%"
-          width="100%"
-          viewBox="0 0 512 512"
-        >
-          <rect height="512" width="512" fill="#01457F" style="" />
-          <image
-            x="0%"
-            y="0%"
-            width="512"
-            height="512"
-            [attr.href]="img.icon"
-            [attr.xlink:href]="img.icon"
-          ></image>
-        </pattern>
-      </defs>
-    </g>
     <text
       x="450"
       y="50"
