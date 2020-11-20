@@ -1,0 +1,19 @@
+#center-title{
+    font-weight: 600;
+    fill: #80C4FF;
+    font-size: 2rem;
+}
+.opt-circle-list text{
+    fill: white;
+    font-size: 17px;
+    font-weight: bold;
+    text-shadow: 2px 2px 12px #1a3350;
+    letter-spacing: 1px;
+
+}
+.opt-circle-list circle{
+    /* stroke: #80C4FF; */
+    stroke: #01457F;
+    stroke-width: 12;
+    cursor: pointer;
+}

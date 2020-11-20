@@ -15,7 +15,7 @@ export class CascadingCircularTabsComponent implements OnInit {
   svgCircleRadius3 = 450;
   svgns = 'http://www.w3.org/2000/svg';
 
-  backgroundColors = ['red', 'yellow', 'grey'];
+  backgroundColors = ['#01457F', '#80C4FF', '#bde0fe'];
 
   ji = 'record.png';
 
@@ -31,8 +31,8 @@ export class CascadingCircularTabsComponent implements OnInit {
   ngOnInit() {
     console.log(data1);
     this.circularTabList.push(data1);
-    this.drawCircle(this.svgCircleRadius1, this.backgroundColors[1], 0);
-    this.drawCircle(this.svgCircleRadius2, this.backgroundColors[0], 1);
+    this.drawCircle(this.svgCircleRadius1, this.backgroundColors[0], 0);
+    this.drawCircle(this.svgCircleRadius2, this.backgroundColors[1], 1);
 
     this.generateAxisData(this.svgCircleRadius2, this.circularTabList[0], 1);
   }
@@ -113,42 +113,42 @@ export class CascadingCircularTabsComponent implements OnInit {
 
 const data1 = [
   {
-    name: 'Jack FFF',
+    name: 'Immunology',
     shortName: 'JFF',
     icon: '/assets/report.png',
     id: 1,
     isSelected: false,
   },
   {
-    name: 'Jack VVs',
+    name: 'Infectious Disease',
     shortName: 'JFF',
     icon: '/assets/vaccine.png',
     id: 2,
     isSelected: false,
   },
   {
-    name: 'Jack Jakki',
+    name: 'Oncology',
     shortName: 'JFF',
     icon: '/assets/report.png',
     id: 3,
     isSelected: false,
   },
   {
-    name: 'Jack n',
+    name: 'Cardiovascular Disease',
     shortName: 'JFF',
     icon: '/assets/vaccine.png',
     id: 4,
     isSelected: false,
   },
   {
-    name: 'Jack Hui hai',
+    name: 'Pulmonary Artery Hypertension',
     shortName: 'JFF',
     icon: '/assets/report.png',
     id: 5,
     isSelected: false,
   },
   {
-    name: 'Jack',
+    name: 'Central Nervous System Disease',
     shortName: 'JFF',
     icon: '/assets/vaccine.png',
     id: 6,
