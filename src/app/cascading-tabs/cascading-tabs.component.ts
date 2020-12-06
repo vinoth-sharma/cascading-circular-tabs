@@ -1,69 +1,75 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-cascading-tabs',
   templateUrl: './cascading-tabs.component.html',
-  styleUrls: ['./cascading-tabs.component.css'],
+  styleUrls: ['./cascading-tabs.component.css']
 })
 export class CascadingTabsComponent implements OnInit {
-  constructor() {}
-  @ViewChild('cascadingTabs', { static: true }) svgEle: ElementRef;
 
+  @ViewChild('cascadingTabs', { static: true }) svgEle: ElementRef;
+  @Input() data1:Array<any> = [];
+  @Input() data2:Array<any> = [];
+  @Output() optionSelected = new EventEmitter<any>();
+  @Output() drugSelected = new EventEmitter<any>();
+  
   svgWidth = 900;
   svgHeight = 700;
-  svgCircleRadius1 = 150;
-  svgCircleRadius2 = 300;
+  svgCircleRadius1 = 200;
+  svgCircleRadius2 = 325;
   svgCircleRadius3 = 450;
-  svgns = 'http://www.w3.org/2000/svg';
-  
+  backgroundColors = ['rgb(23,64,111)', '#67b7e6', '#bde0fe'];
 
-  backgroundColors = ['red', 'yellow', 'grey'];
+  isLevel1Selected:boolean = false;
+  circularTabList = [];
+  therapeutic_data = [];
+  drug_data = [];
 
-  ji = 'record.png';
-
-  level1 = [];
-
-  ngOnInit(): void {
-    console.log(this.svgEle);
-    this.level1 = data1;
+  ngOnInit() {
+    this.therapeutic_data = this.data1;    
+    this.drawCircle(this.svgCircleRadius1, this.backgroundColors[0], 0);
+    this.drawCircle(this.svgCircleRadius2, this.backgroundColors[1], 1);
+    this.generateAxisData(this.svgCircleRadius2, this.therapeutic_data, 1);
   }
 
-  ngAfterViewInit() {
-    console.log(data1);
-    this.drawCircle(this.svgCircleRadius1, this.backgroundColors[1],0);
-
-    this.drawCircle(this.svgCircleRadius2, this.backgroundColors[0],1);
-
-    this.getPointsOnCircle(this.svgCircleRadius2, this.level1, 1);
-
-    // this.getPointsOnCircle(this.svgCircleRadius3, this.level1);
-
-    // this.svgEle.nativeElement.insertAdjacentHTML(
-    //   'afterbegin',
-    //   `<circle r=${this.svgCircleRadius3} cx=${
-    //     this.svgWidth / 2
-    //   } cy="0" fill="grey" />`
-    // );
-
-    console.log(this.svgEle);
+  ngOnChanges(simpleChanges: SimpleChanges){
+    if(simpleChanges.data2.currentValue){
+      this.drug_data = simpleChanges.data2.currentValue;
+      this.updateDrugData();
+    }
   }
 
-  onClickOption(event) {
-    console.log(event);
-    this.drawCircle(this.svgCircleRadius3, this.backgroundColors[2],2);
-    this.getPointsOnCircle(this.svgCircleRadius3, this.level1, 2);
+  updateDrugData(){
+    if(this.drug_data.length){
+      this.generateAxisData(
+        this.svgCircleRadius3,
+        this.drug_data,
+        2
+      );
+      this.drawCircle(this.svgCircleRadius3, this.backgroundColors[2], 2);  
+    }
+    else{
+      this.removeCircle(2);
+    }
   }
 
-  drawCircle(r, color,group) {
-    this.svgEle.nativeElement.insertAdjacentHTML(
-      'afterbegin',
-      `<circle r=${r} cx=${this.svgWidth / 2} cy="0" fill=${color} id=${"circle_"+group} />`
-    );
+  drawCircle(r, color, group) {
+    if(!this.svgEle.nativeElement.querySelector(`#ccircle_${group}`))
+      this.svgEle.nativeElement.insertAdjacentHTML(
+        'afterbegin',
+        `<circle r=${r} cx=${this.svgWidth / 2} cy="0" fill=${color} id=${
+          'ccircle_' + group
+        } />`
+      );
   }
 
-  getPointsOnCircle(r, data, group) {
+  removeCircle(id) {
+    if(this.svgEle.nativeElement.querySelector(`#ccircle_${id}`))
+      this.svgEle.nativeElement.querySelector(`#ccircle_${id}`).remove();
+  }
+
+  generateAxisData(r, data, group) {
     let noOfDots = data.length;
-
     let initailDeg = 180 / (noOfDots + 1);
 
     // calculate the point on outer circle
@@ -78,121 +84,41 @@ export class CascadingTabsComponent implements OnInit {
       let temp_x = 0;
       if (Math.sign(point.x) === 1) {
         temp_x = this.svgWidth / 2 - point.x;
-        point['textX'] = Math.round(temp_x) - 60; // padding left to the text
+        point['textX'] = Math.round(temp_x) - 34; // padding left to the text
+        point['textPosition'] = "end";
       } else {
         temp_x = this.svgWidth / 2 + -point.x;
-        point['textX'] = Math.round(temp_x) + 60; //padding right to the text
+        point['textX'] = Math.round(temp_x) + 34; //padding right to the text
+        point['textPosition'] = "start";
       }
       point.x = Math.round(temp_x);
       point.y = Math.round(point.y);
     });
 
-    let circleGroup = document.createElementNS(this.svgns, 'g');
-    circleGroup.setAttribute('id', "gcircle_"+group);
+  }
 
-    //append the small circle to the outer border circle
-    data.forEach((ele) => {
-      let circleEle = document.createElementNS(this.svgns, 'circle');
-      circleEle.addEventListener('click', this.onClickOption.bind(this, ele));
-      circleEle.setAttribute('r', '25');
-      circleEle.setAttribute('cx', ele.x);
-      circleEle.setAttribute('cy', ele.y);
-      circleEle.setAttribute('fill', `url(#image${ele.id})`);
-      circleEle.setAttribute('stroke-width', '2');
-      circleEle.setAttribute('stroke', 'black');
-      circleEle.setAttribute('id', 'circle_' + ele.id);
-      // console.log(circleEle);
 
-      circleGroup.appendChild(circleEle);
-      //  .insertAdjacentElement("beforeend",circleEle)
-      // this.svgEle.nativeElement.insertAdjacentHTML(
-      //   'beforeend',
-      //   `<circle r="25" cx=${ele.x} cy=${ele.y} stroke-width="2" stroke="black" fill="url(#image${ele.id})" (click)="onClickOption(ele)" id=${'circle'+ele.id} />
-      //   <text x=${ele.textX} y=${ele.y} text-anchor="middle" fill="white" font-size="12px" font-family="Arial" dy=".3em">${ele.name}</text>`
-      // );
+  onClickOption(ele, type){
+    if(type === 1){
+      this.therapeutic_data.forEach((element) => {
+        if (element.id === ele.id) element.isSelected = !element.isSelected;
+        else element.isSelected = false;
+      });
+      this.optionSelected.emit({data: this.therapeutic_data,type: type});  
+    }else{
+      this.drug_data.forEach((element) => {
+        if (element.id === ele.id) element.isSelected = !element.isSelected;
+        else element.isSelected = false;
+      });
+      this.drugSelected.emit({ therapy : this.therapeutic_data , drug : this.drug_data })
+    }
+    this.validateSelection();
+  }
 
-      // this.svgEle.nativeElement.querySelector(`#circle${ele.id}`).addEventListener("click",this.onClickOption.bind(this,ele))
-    });
-
-    this.svgEle.nativeElement.insertAdjacentElement('beforeend', circleGroup);
-
-    console.log(data);
-    console.log(this.level1);
+  validateSelection(){
+    this.isLevel1Selected = this.therapeutic_data.some(ele=>{
+      return ele.isSelected
+    })
   }
 }
 
-const data1 = [
-  {
-    name: 'Jack FFF',
-    icon: '/assets/report.png',
-    id: 1,
-  },
-  {
-    name: 'Jack VVs',
-    icon: '/assets/vaccine.png',
-    id: 2,
-  },
-  {
-    name: 'Jack Jakki',
-    icon: '/assets/report.png',
-    id: 3,
-  },
-  {
-    name: 'Jack n',
-    icon: '/assets/vaccine.png',
-    id: 4,
-  },
-  {
-    name: 'Jack Hui hai',
-    icon: '/assets/report.png',
-    id: 5,
-  },
-  {
-    name: 'Jack',
-    icon: '/assets/vaccine.png',
-    id: 6,
-  },
-];
-
-const data2 = [
-  {
-    parentId: 1,
-    data: [
-      {
-        name: 'child1',
-        icon: '/assets/vaccine.png',
-        id: 7,
-      },
-      {
-        name: 'child2',
-        icon: '/assets/vaccine.png',
-        id: 8,
-      },
-      {
-        name: 'child3',
-        icon: '/assets/vaccine.png',
-        id: 9,
-      },
-    ],
-  },
-  {
-    parentId: 2,
-    data: [
-      {
-        name: 'child1',
-        icon: '/assets/vaccine.png',
-        id: 10,
-      },
-      {
-        name: 'child2',
-        icon: '/assets/vaccine.png',
-        id: 12,
-      },
-      {
-        name: 'child3',
-        icon: '/assets/vaccine.png',
-        id: 12,
-      },
-    ],
-  },
-];

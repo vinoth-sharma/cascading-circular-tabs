@@ -1,39 +1,90 @@
-<!-- <div>
-  <svg width="500" height="500" >
-    <circle cx="100" cy="100" r="100" fill="#529fca" />
-    <path d="M50,50 a1,1 0 0,0 100,0" fill="blue" />
-    <path d="M0,50 a1,1 0 0,0 200,0" fill="red" />
-  </svg>
-</div> -->
+<div class="cascading-tab-container">
+  <svg [attr.width]="svgWidth" height="100vh" #cascadingTabs viewPort="0 0 900 600">
 
-<div style="text-align: center">
-  <svg width="900" height="700" viewBox="0 0 900 700" #cascadingTabs >
-    <!-- <circle r="450" cx="450" cy="0" fill="grey" /> -->
-    <!-- <circle r="300" cx="450" cy="0" fill="yellow" /> -->
-    <!-- <circle r="150" cx="450" cy="0" fill="red" /> -->
+    <!-- therapeutic circle -->
+    <g
+      *ngFor="let ele of therapeutic_data; let i = index"
+      class="opt-circle-list"
+    >
+      <circle
+        class="img-circle-0"
+        [attr.r]="ele.isSelected ? 40 : 30"
+        [attr.cx]="ele.x"
+        [attr.cy]="ele.y"
+        (click)="onClickOption(ele, 1)"
+        [id]="'circle_' + ele.id"
+      />
+      <image
+        [attr.x]="ele.x - 15"
+        [attr.y]="ele.y - 15"
+        width="30"
+        height="30"
+        [attr.href]="ele.image"
+        [attr.xlink:href]="ele.image"
+        (click)="onClickOption(ele, 1)"
+      />
 
-
-    <!-- images -->
-    <defs *ngFor="let img of level1" >
-      <pattern
-        [id]="'image'+img.id"
-        x="0%"
-        y="0%"
-        height="100%"
-        width="100%"
-        viewBox="0 0 512 512"
+      <text
+        class="opt-name"
+        [attr.x]="ele.textX"
+        [attr.y]="ele.y + 4"
+        [attr.font-size]="ele.isSelected ? '22px' : '16px'"
+        [attr.text-anchor]="ele.textPosition"
+        (click)="onClickOption(ele, 1)"
       >
-        <image
-          x="0%"
-          y="0%"
-          width="512"
-          height="512"
-          [attr.href]="img.icon"
-          xlink:href="https://cdn3.iconfinder.com/data/icons/people-professions/512/Baby-512.pg"
-        ></image>
-      </pattern>
-    </defs>
+        {{ isLevel1Selected ? ele.name : ele.displayName }}
+      </text>
 
-    <text x="450" y="50" text-anchor="middle" fill="black" font-size="16px" font-family="Arial" dy=".3em">CLICK</text>
+      <!-- center circle text - title-->
+      <text
+        x="450"
+        [attr.y]="svgCircleRadius1 - 100"
+        text-anchor="middle"
+        id="center-title"
+      >
+        PRISM
+      </text>
+      <text
+        x="450"
+        [attr.y]="svgCircleRadius1 + 40"
+        text-anchor="middle"
+        id="center-title-child"
+      >
+        THERAPEUTIC AREAS
+      </text>
+    </g>
+
+    <!-- drug circle -->
+    <g *ngFor="let ele of drug_data" class="opt-circle-list">
+      <circle
+        class="img-circle-1"
+        [attr.r]="ele.isSelected ? 18 : 12"
+        [attr.cx]="ele.x"
+        [attr.cy]="ele.y"
+        (click)="onClickOption(ele, 2)"
+        [id]="'circle_' + ele.id"
+      />
+      <text
+        class="opt-name"
+        [attr.x]="ele.x"
+        [attr.y]="ele.y + 50"
+        [attr.font-size]="ele.isSelected ? '20px' : '16px'"
+        text-anchor="middle"
+        style="text-transform: capitalize;"
+        (click)="onClickOption(ele, 2)"
+      >
+        {{ ele.name }}
+      </text>
+
+      <!-- center circle text - title-->
+      <text
+        x="450"
+        [attr.y]="svgCircleRadius2 + 40"
+        text-anchor="middle"
+        id="center-title-child"
+      >
+        DRUGS
+      </text>
+    </g>
   </svg>
 </div>
